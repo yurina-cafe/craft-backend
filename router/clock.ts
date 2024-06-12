@@ -1,8 +1,10 @@
 import express from "express";
+import { getAvaliableClock } from "../controller/clock";
+import { Clock } from "../types/activity";
 
 export const clockRouter = express.Router();
 
-clockRouter.get("/", (req, res) => {
+clockRouter.get("/all", (req, res) => {
   const query = req.query as any;
 
   const user = query.user;
@@ -11,5 +13,6 @@ clockRouter.get("/", (req, res) => {
     return;
   }
 
-  res.send(user);
+  const clocks: Clock[] = getAvaliableClock(user);
+  res.send(clocks);
 });
