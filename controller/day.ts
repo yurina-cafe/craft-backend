@@ -9,14 +9,17 @@ export const getDay = (userName: string, dayName: string) => {
   return tryInitializeDay(userName, dayName);
 };
 
-export const getAllDays = (userName: string) => {
+export const getAllDays = (userName: string): NaturalDay[] => {
   const files = getAllJsonFiles(userName);
-  return files.map((file) => {
+  const days = files.map((file) => {
     const ctx = fs.readFileSync(`data/${userName}/${file}`, "utf-8");
-    if (ctx) {
-      return JSON.parse(ctx) as NaturalDay;
-    }
+    return JSON.parse(ctx) as NaturalDay;
   });
+  const sortedDays = days.sort((a, b) => {
+    return a.date.localeCompare(b.date);
+  });
+
+  return sortedDays;
 };
 
 interface RecentDays {
@@ -64,6 +67,16 @@ export const addDayActivity = (
 ) => {
   const day = tryInitializeDay(userName, dayName);
   day.activities.push(activity);
+  saveJSON(userName, dayName, day);
+};
+
+export const setDayActivity = (
+  userName: string,
+  dayName: string,
+  activities: Activity[]
+) => {
+  const day = tryInitializeDay(userName, dayName);
+  day.activities = activities;
   saveJSON(userName, dayName, day);
 };
 
