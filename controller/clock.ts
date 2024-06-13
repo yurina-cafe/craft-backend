@@ -1,15 +1,16 @@
 import { ActivityType, Clock } from "../types/activity";
 import { NaturalDay } from "../types/day";
-import { getAllDays, getDay, getRecentThreeDays } from "./day";
+import { getAllDays, getDay, getRecentThreeDays, setDayActivity } from "./day";
 
 export const getAvaliableClock = (userName: string) => {
   const { yesterday, today } = getRecentThreeDays(userName);
-  const clocks: Clock[] = [];
+  let clocks: Clock[] = [];
 
   const yesterdayClocks = getClocksSpecificDay(userName, yesterday);
   const todayClocks = getClocksSpecificDay(userName, today);
   clocks.push(...yesterdayClocks, ...todayClocks);
 
+  clocks = clocks.filter((clock) => !clock.finished);
   return clocks;
 };
 
@@ -31,6 +32,8 @@ export const completeClock = (
         activity.clock.start = startTime;
         activity.clock.end = endTime;
         activity.clock.finished = true;
+
+        setDayActivity(userName, day.date, day.activities);
         return activity.clock;
       }
     }
