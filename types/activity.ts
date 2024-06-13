@@ -37,7 +37,7 @@ export interface Clock {
   /**
    * 结果数据
    */
-  start?: number; // @Nesb01t todo
-  end?: number; // @Nesb01t todo
+  start?: number; // timestamp
+  end?: number; // timestamp
   finished?: boolean; // 是否已完成
 }

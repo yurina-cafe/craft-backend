@@ -1,6 +1,6 @@
 import { ActivityType, Clock } from "../types/activity";
 import { NaturalDay } from "../types/day";
-import { getDay, getRecentThreeDays } from "./day";
+import { getAllDays, getDay, getRecentThreeDays } from "./day";
 
 export const getAvaliableClock = (userName: string) => {
   const { yesterday, today } = getRecentThreeDays(userName);
@@ -11,6 +11,31 @@ export const getAvaliableClock = (userName: string) => {
   clocks.push(...yesterdayClocks, ...todayClocks);
 
   return clocks;
+};
+
+export const completeClock = (
+  userName: string,
+  clockName: string,
+  startTime: number,
+  endTime: number
+): Clock | undefined => {
+  const days = getAllDays(userName);
+  for (let i = 0; i < days.length; i++) {
+    const day = days[i];
+    for (let j = 0; j < day.activities.length; j++) {
+      const activity = day.activities[j];
+      if (
+        activity.type === ActivityType.CLOCK &&
+        activity.clock.name === clockName
+      ) {
+        activity.clock.start = startTime;
+        activity.clock.end = endTime;
+        activity.clock.finished = true;
+        return activity.clock;
+      }
+    }
+  }
+  return;
 };
 
 export const getClocksSpecificDay = (

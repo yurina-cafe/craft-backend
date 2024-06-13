@@ -1,5 +1,5 @@
 import express from "express";
-import { getAvaliableClock } from "../controller/clock";
+import { completeClock, getAvaliableClock } from "../controller/clock";
 import { Clock } from "../types/activity";
 
 export const clockRouter = express.Router();
@@ -15,4 +15,21 @@ clockRouter.get("/all", (req, res) => {
 
   const clocks: Clock[] = getAvaliableClock(user);
   res.send(clocks);
+});
+
+clockRouter.post("/complete", (req, res) => {
+  const body = req.body as any;
+
+  const user = body.user;
+  const currentPoromodo = body.currentPoromodo;
+  const startTime = body.startTime;
+  const endTime = body.endTime;
+
+  if (!user || !currentPoromodo) {
+    res.send("user or clockId not found");
+    return;
+  }
+
+  const clock = completeClock(user, currentPoromodo, startTime, endTime);
+  res.send(clock);
 });
