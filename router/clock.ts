@@ -18,9 +18,10 @@ clockRouter.get("/all", (req, res) => {
 });
 
 clockRouter.post("/complete", (req, res) => {
+  const query = req.query as any;
   const body = req.body as any;
 
-  const user = body.user;
+  const user = query.user;
   const currentPoromodo = body.currentPoromodo;
   const startTime = body.startTime;
   const endTime = body.endTime;
